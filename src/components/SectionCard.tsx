@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { theme } from '../styles/theme'
-import type { Section } from '../types'
+import type { Section, Work } from '../types'
 import { WorkItem } from './WorkItem'
 
 const CardWrapper = styled.div<{ $width?: number; $height?: number }>`
@@ -53,10 +53,6 @@ const DeleteSectionButton = styled.button`
   transition: opacity ${theme.transitions.buttonHover},
     background-color ${theme.transitions.buttonHover};
 
-  ${CardWrapper}:hover & {
-    opacity: 1;
-  }
-
   &:hover {
     background-color: #fee2e2;
     color: #dc2626;
@@ -97,10 +93,6 @@ const ResizeHandle = styled.div`
   opacity: 0;
   transition: opacity ${theme.transitions.buttonHover};
 
-  ${CardWrapper}:hover & {
-    opacity: 0.5;
-  }
-
   &::after {
     content: '';
     position: absolute;
@@ -115,6 +107,16 @@ const ResizeHandle = styled.div`
 
 const CardContainer = styled.div`
   position: relative;
+  display: inline-block;
+`
+
+const CardInner = styled(CardWrapper)`
+  &:hover ${ResizeHandle} {
+    opacity: 0.5;
+  }
+  &:hover ${DeleteSectionButton} {
+    opacity: 1;
+  }
 `
 
 interface SectionCardProps {
@@ -185,7 +187,7 @@ export function SectionCard({
 
   return (
     <CardContainer>
-      <CardWrapper ref={cardRef} $width={section.width} $height={section.height}>
+      <CardInner ref={cardRef} $width={section.width} $height={section.height}>
         <CardHeader>
           <SectionTitle>{section.name}</SectionTitle>
           <DeleteSectionButton onClick={onDelete}>×</DeleteSectionButton>
@@ -201,8 +203,8 @@ export function SectionCard({
           ))}
         </WorksList>
         <AddWorkButton onClick={onAddWork}>+ 添加作品</AddWorkButton>
-      </CardWrapper>
-      <ResizeHandle onMouseDown={handleMouseDown} />
+        <ResizeHandle onMouseDown={handleMouseDown} />
+      </CardInner>
     </CardContainer>
   )
 }

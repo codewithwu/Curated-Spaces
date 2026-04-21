@@ -19,9 +19,10 @@
 | `border` | #E5E7EB | 边框色 |
 
 ### 字体
-- 标题：`"Inter", "Noto Sans SC", sans-serif`
-- 正文：`"Inter", "Noto Sans SC", sans-serif`
+- 全部使用本地字体：`./fonts/NotoSansSC-Regular.otf`
 - 等宽（链接）：`"JetBrains Mono", monospace`
+
+> 通过 @font-face 加载本地 OTF 文件，格式：otf
 
 ### 间距系统
 - 基础单位：4px
@@ -81,6 +82,13 @@
 状态：
 - default: 白底卡片，1px border，8px 圆角
 - hover: translateY(-2px)，shadow 增强
+- resizing: 拖拽调整大小时，鼠标变为 col-resize / row-resize
+
+交互：
+- 每个区域卡片右下角有resize手柄（图标）
+- 拖拽可调整卡片宽度和高度
+- 最小尺寸：200px x 150px
+- 最大尺寸：不超过网格容器
 ```
 
 ### 5.2 WorkItem
@@ -121,6 +129,8 @@ interface Section {
   id: string;           // UUID
   name: string;         // 区域名称，如"前端项目"
   works: Work[];
+  width?: number;       // 卡片宽度 (px)
+  height?: number;      // 卡片高度 (px)
 }
 
 interface PortfolioData {

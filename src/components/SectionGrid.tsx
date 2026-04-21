@@ -5,16 +5,19 @@ import { SectionCard } from './SectionCard'
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
   gap: ${theme.spacing.cardGap}px;
   padding: ${theme.spacing.pagePadding}px;
-  padding-bottom: 100px;
+  padding-top: 32px;
+  padding-bottom: 120px;
 
-  @media (min-width: 1024px) {
+  @media (min-width: 1200px) {
     grid-template-columns: repeat(3, 1fr);
+    max-width: 1200px;
+    margin: 0 auto;
   }
 
-  @media (min-width: 768px) and (max-width: 1023px) {
+  @media (min-width: 768px) and (max-width: 1199px) {
     grid-template-columns: repeat(2, 1fr);
   }
 
@@ -25,25 +28,33 @@ const Grid = styled.div`
 
 const EmptyState = styled.div`
   grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
   text-align: center;
-  padding: 60px 20px;
-  color: ${theme.colors.textSecondary};
 `
 
 const EmptyIcon = styled.div`
-  font-size: 48px;
-  margin-bottom: 16px;
-  opacity: 0.5;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 24px;
+  opacity: 0.12;
+  background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='3' y='3' width='18' height='18' rx='2' stroke='%232C2C2C' stroke-width='1.5'/%3E%3Cpath d='M8 12h8M12 8v8' stroke='%232C2C2C' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
 `
 
 const EmptyText = styled.p`
-  font-size: 16px;
+  font-size: 15px;
+  color: ${theme.colors.textSecondary};
   margin-bottom: 8px;
+  letter-spacing: 0.02em;
 `
 
 const EmptyHint = styled.p`
-  font-size: 14px;
-  opacity: 0.7;
+  font-size: 13px;
+  color: ${theme.colors.textSecondary};
+  opacity: 0.6;
 `
 
 interface SectionGridProps {
@@ -67,9 +78,9 @@ export function SectionGrid({
     return (
       <Grid>
         <EmptyState>
-          <EmptyIcon>📁</EmptyIcon>
+          <EmptyIcon />
           <EmptyText>还没有任何区域</EmptyText>
-          <EmptyHint>点击右下角按钮添加第一个区域</EmptyHint>
+          <EmptyHint>点击右下角 + 按钮添加第一个作品分类</EmptyHint>
         </EmptyState>
       </Grid>
     )

@@ -4,82 +4,102 @@ import { theme } from '../styles/theme'
 import type { Section, Work } from '../types'
 import { WorkItem } from './WorkItem'
 
+const CardContainer = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+`
+
 const CardWrapper = styled.div<{ $width?: number; $height?: number }>`
   position: relative;
   background-color: ${theme.colors.surface};
   border: 1px solid ${theme.colors.border};
   border-radius: ${theme.borderRadius.card}px;
   padding: ${theme.spacing.cardPadding}px;
-  min-width: 200px;
-  min-height: 150px;
-  width: ${(props) => props.$width ?? 320}px;
+  min-width: 280px;
+  min-height: 180px;
+  width: ${(props) => props.$width ?? 340}px;
   height: ${(props) => props.$height ?? 'auto'}px;
   display: flex;
   flex-direction: column;
-  transition: transform ${theme.transitions.cardHover},
-    box-shadow ${theme.transitions.cardHover};
+  box-shadow: ${theme.shadows.card};
+  transition: all ${theme.transitions.cardHover};
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    box-shadow: ${theme.shadows.cardHover};
+  }
+
+  &:hover .delete-btn {
+    opacity: 1;
   }
 `
 
 const CardHeader = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
+  align-items: baseline;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid ${theme.colors.border};
 `
 
 const SectionTitle = styled.h3`
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 500;
   color: ${theme.colors.primary};
+  letter-spacing: 0.02em;
+`
+
+const WorkCount = styled.span`
+  font-size: 11px;
+  color: ${theme.colors.textSecondary};
+  letter-spacing: 0.05em;
 `
 
 const DeleteSectionButton = styled.button`
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
   background-color: transparent;
   color: ${theme.colors.textSecondary};
-  border: 1px solid ${theme.colors.border};
-  font-size: 14px;
+  border: none;
+  font-size: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity ${theme.transitions.buttonHover},
-    background-color ${theme.transitions.buttonHover};
+  transition: all ${theme.transitions.buttonHover};
 
   &:hover {
-    background-color: #fee2e2;
-    color: #dc2626;
-    border-color: #dc2626;
+    background-color: ${theme.colors.danger};
+    color: white;
   }
 `
 
 const WorksList = styled.div`
   flex: 1;
   overflow-y: auto;
+  margin: 0 -4px;
+  padding: 0 4px;
 `
 
 const AddWorkButton = styled.button`
   width: 100%;
-  padding: 8px;
-  margin-top: 12px;
+  padding: 12px;
+  margin-top: 16px;
   border: 1px dashed ${theme.colors.border};
-  border-radius: 4px;
+  border-radius: 8px;
   background-color: transparent;
   color: ${theme.colors.textSecondary};
   font-size: 13px;
-  transition: border-color ${theme.transitions.buttonHover},
-    color ${theme.transitions.buttonHover};
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  transition: all ${theme.transitions.buttonHover};
 
   &:hover {
     border-color: ${theme.colors.accent};
     color: ${theme.colors.accent};
+    background-color: rgba(124, 154, 146, 0.04);
   }
 `
 
@@ -87,8 +107,8 @@ const ResizeHandle = styled.div`
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   cursor: se-resize;
   opacity: 0;
   transition: opacity ${theme.transitions.buttonHover};
@@ -96,25 +116,16 @@ const ResizeHandle = styled.div`
   &::after {
     content: '';
     position: absolute;
-    bottom: 4px;
-    right: 4px;
-    width: 8px;
-    height: 8px;
-    border-right: 2px solid ${theme.colors.textSecondary};
-    border-bottom: 2px solid ${theme.colors.textSecondary};
+    bottom: 6px;
+    right: 6px;
+    width: 6px;
+    height: 6px;
+    border-right: 1.5px solid ${theme.colors.textSecondary};
+    border-bottom: 1.5px solid ${theme.colors.textSecondary};
+    opacity: 0.4;
   }
-`
 
-const CardContainer = styled.div`
-  position: relative;
-  display: inline-block;
-`
-
-const CardInner = styled(CardWrapper)`
-  &:hover ${ResizeHandle} {
-    opacity: 0.5;
-  }
-  &:hover ${DeleteSectionButton} {
+  ${CardWrapper}:hover & {
     opacity: 1;
   }
 `
@@ -147,7 +158,7 @@ export function SectionCard({
       resizeStartRef.current = {
         x: e.clientX,
         y: e.clientY,
-        width: cardRef.current?.offsetWidth ?? 320,
+        width: cardRef.current?.offsetWidth ?? 340,
         height: cardRef.current?.offsetHeight ?? 200,
       }
     },
@@ -160,8 +171,8 @@ export function SectionCard({
     const handleMouseMove = (e: MouseEvent) => {
       const deltaX = e.clientX - resizeStartRef.current.x
       const deltaY = e.clientY - resizeStartRef.current.y
-      const newWidth = Math.max(200, resizeStartRef.current.width + deltaX)
-      const newHeight = Math.max(150, resizeStartRef.current.height + deltaY)
+      const newWidth = Math.max(280, resizeStartRef.current.width + deltaX)
+      const newHeight = Math.max(180, resizeStartRef.current.height + deltaY)
 
       if (cardRef.current) {
         cardRef.current.style.width = `${newWidth}px`
@@ -185,12 +196,17 @@ export function SectionCard({
     }
   }, [isResizing, onUpdateSize])
 
+  const workCount = section.works.length
+
   return (
     <CardContainer>
-      <CardInner ref={cardRef} $width={section.width} $height={section.height}>
+      <CardWrapper ref={cardRef} $width={section.width} $height={section.height}>
         <CardHeader>
           <SectionTitle>{section.name}</SectionTitle>
-          <DeleteSectionButton onClick={onDelete}>×</DeleteSectionButton>
+          <WorkCount>{workCount} {workCount === 1 ? '项' : '项'}</WorkCount>
+          <DeleteSectionButton className="delete-btn" onClick={onDelete}>
+            ×
+          </DeleteSectionButton>
         </CardHeader>
         <WorksList>
           {section.works.map((work) => (
@@ -204,7 +220,7 @@ export function SectionCard({
         </WorksList>
         <AddWorkButton onClick={onAddWork}>+ 添加作品</AddWorkButton>
         <ResizeHandle onMouseDown={handleMouseDown} />
-      </CardInner>
+      </CardWrapper>
     </CardContainer>
   )
 }

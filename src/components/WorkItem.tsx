@@ -5,38 +5,45 @@ import type { Work } from '../types'
 
 const ItemWrapper = styled.div`
   position: relative;
-  background-color: ${theme.colors.surface};
-  border-left: 3px solid ${theme.colors.accent};
-  padding: 12px 16px;
-  margin-bottom: 8px;
-  border-radius: 0 4px 4px 0;
-  transition: box-shadow ${theme.transitions.cardHover};
+  background-color: transparent;
+  padding: 14px 0;
+  margin-bottom: 0;
+  border-bottom: 1px solid ${theme.colors.border};
+  transition: all ${theme.transitions.buttonHover};
 
-  &:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  &:last-child {
+    border-bottom: none;
   }
 
-  &:hover .delete-btn {
-    opacity: 1;
+  &:hover {
+    .delete-btn {
+      opacity: 1;
+    }
   }
 `
 
 const DeleteButton = styled.button`
   position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 20px;
-  height: 20px;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  background-color: ${theme.colors.textSecondary};
-  color: white;
+  background-color: transparent;
+  color: ${theme.colors.textSecondary};
   border: none;
-  font-size: 12px;
+  font-size: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity ${theme.transitions.buttonHover};
+  transition: all ${theme.transitions.buttonHover};
+
+  &:hover {
+    background-color: ${theme.colors.danger};
+    color: white;
+  }
 `
 
 const Title = styled.h4`
@@ -44,52 +51,81 @@ const Title = styled.h4`
   font-weight: 500;
   color: ${theme.colors.textPrimary};
   margin-bottom: 4px;
+  padding-right: 32px;
+  line-height: 1.4;
 `
 
 const Url = styled.a`
   font-size: 12px;
   color: ${theme.colors.accent};
-  font-family: 'JetBrains Mono', monospace;
+  font-weight: 400;
+  letter-spacing: 0.01em;
   word-break: break-all;
+  display: inline-block;
+  padding: 2px 0;
+  border-bottom: 1px solid transparent;
+  transition: all ${theme.transitions.buttonHover};
 
   &:hover {
-    text-decoration: underline;
+    border-bottom-color: ${theme.colors.accent};
   }
 `
 
 const Description = styled.p`
   font-size: 12px;
   color: ${theme.colors.textSecondary};
-  margin-top: 6px;
-  line-height: 1.4;
+  margin-top: 8px;
+  line-height: 1.6;
 `
 
 const EditInput = styled.input`
   width: 100%;
-  padding: 4px 8px;
-  border: 2px solid ${theme.colors.highlight};
-  border-radius: 4px;
+  padding: 10px 12px;
+  border: 1.5px solid ${theme.colors.accent};
+  border-radius: 8px;
   font-size: 14px;
-  margin-bottom: 4px;
+  margin-bottom: 8px;
+  background-color: ${theme.colors.surface};
+  transition: all ${theme.transitions.buttonHover};
 
   &:focus {
     outline: none;
+    border-color: ${theme.colors.accent};
+    box-shadow: 0 0 0 3px rgba(124, 154, 146, 0.15);
+  }
+
+  &::placeholder {
+    color: ${theme.colors.textSecondary};
   }
 `
 
 const EditTextarea = styled.textarea`
   width: 100%;
-  padding: 4px 8px;
-  border: 2px solid ${theme.colors.highlight};
-  border-radius: 4px;
-  font-size: 12px;
+  padding: 10px 12px;
+  border: 1.5px solid ${theme.colors.accent};
+  border-radius: 8px;
+  font-size: 13px;
   resize: vertical;
-  min-height: 60px;
-  margin-top: 4px;
+  min-height: 72px;
+  background-color: ${theme.colors.surface};
+  transition: all ${theme.transitions.buttonHover};
 
   &:focus {
     outline: none;
+    border-color: ${theme.colors.accent};
+    box-shadow: 0 0 0 3px rgba(124, 154, 146, 0.15);
   }
+
+  &::placeholder {
+    color: ${theme.colors.textSecondary};
+  }
+`
+
+const EditHint = styled.div`
+  margin-top: 8px;
+  font-size: 11px;
+  color: ${theme.colors.textSecondary};
+  opacity: 0.7;
 `
 
 interface WorkItemProps {
@@ -151,11 +187,9 @@ export function WorkItem({ work, onUpdate, onDelete }: WorkItemProps) {
           value={editDescription}
           onChange={(e) => setEditDescription(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="描述"
+          placeholder="描述（可选）"
         />
-        <div style={{ marginTop: 8, fontSize: 11, color: theme.colors.textSecondary }}>
-          Ctrl+Enter 保存 | Esc 取消
-        </div>
+        <EditHint>Ctrl + Enter 保存 · Esc 取消</EditHint>
       </ItemWrapper>
     )
   }

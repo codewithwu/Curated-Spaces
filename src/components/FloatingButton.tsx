@@ -3,29 +3,32 @@ import { theme } from '../styles/theme'
 
 const Button = styled.button`
   position: fixed;
-  bottom: 24px;
-  right: 24px;
-  width: 56px;
-  height: 56px;
+  bottom: 32px;
+  right: 32px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   background-color: ${theme.colors.accent};
   color: white;
   border: none;
-  font-size: 28px;
+  font-size: 20px;
+  font-weight: 300;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: background-color ${theme.transitions.buttonHover},
-    transform ${theme.transitions.buttonHover};
+  box-shadow: ${theme.shadows.card};
+  transition: all ${theme.transitions.buttonHover};
+  z-index: 100;
 
   &:hover {
-    background-color: #238277;
-    transform: scale(1.05);
+    background-color: #6B8A82;
+    box-shadow: ${theme.shadows.cardHover};
+    transform: translateY(-2px);
   }
 
   &:active {
-    transform: scale(0.95);
+    transform: translateY(0);
+    box-shadow: ${theme.shadows.card};
   }
 `
 

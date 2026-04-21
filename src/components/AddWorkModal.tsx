@@ -8,7 +8,8 @@ const Overlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(44, 44, 44, 0.4);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -16,26 +17,23 @@ const Overlay = styled.div`
   animation: fadeIn 200ms ease-out;
 
   @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 `
 
 const Modal = styled.div`
   background-color: ${theme.colors.surface};
   border-radius: ${theme.borderRadius.modal}px;
-  padding: 24px;
+  padding: 32px;
   width: 480px;
   max-width: 90vw;
-  animation: scaleIn 200ms ease-out;
+  box-shadow: ${theme.shadows.modal};
+  animation: scaleIn 250ms cubic-bezier(0.4, 0, 0.2, 1);
 
   @keyframes scaleIn {
     from {
-      transform: scale(0.95);
+      transform: scale(0.96);
       opacity: 0;
     }
     to {
@@ -46,85 +44,109 @@ const Modal = styled.div`
 `
 
 const Title = styled.h3`
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 17px;
+  font-weight: 500;
   color: ${theme.colors.primary};
-  margin-bottom: 16px;
+  margin-bottom: 24px;
+  letter-spacing: 0.01em;
 `
 
 const FormGroup = styled.div`
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 `
 
 const Label = styled.label`
   display: block;
-  font-size: 13px;
+  font-size: 12px;
   color: ${theme.colors.textSecondary};
-  margin-bottom: 4px;
+  margin-bottom: 6px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
 `
 
 const Input = styled.input`
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid ${theme.colors.border};
-  border-radius: 6px;
+  padding: 14px 16px;
+  border: 1.5px solid ${theme.colors.border};
+  border-radius: 10px;
   font-size: 14px;
+  background-color: ${theme.colors.background};
+  transition: all ${theme.transitions.buttonHover};
 
   &:focus {
     outline: none;
     border-color: ${theme.colors.accent};
+    background-color: ${theme.colors.surface};
+  }
+
+  &::placeholder {
+    color: ${theme.colors.textSecondary};
   }
 `
 
 const Textarea = styled.textarea`
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid ${theme.colors.border};
-  border-radius: 6px;
+  padding: 14px 16px;
+  border: 1.5px solid ${theme.colors.border};
+  border-radius: 10px;
   font-size: 14px;
   resize: vertical;
-  min-height: 80px;
+  min-height: 100px;
+  background-color: ${theme.colors.background};
+  transition: all ${theme.transitions.buttonHover};
 
   &:focus {
     outline: none;
     border-color: ${theme.colors.accent};
+    background-color: ${theme.colors.surface};
+  }
+
+  &::placeholder {
+    color: ${theme.colors.textSecondary};
   }
 `
 
 const ButtonGroup = styled.div`
   display: flex;
   justify-content: flex-end;
-  gap: 8px;
-  margin-top: 16px;
+  gap: 12px;
+  margin-top: 24px;
 `
 
 const CancelButton = styled.button`
-  padding: 8px 16px;
-  border: 1px solid ${theme.colors.border};
-  border-radius: 6px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
   background-color: transparent;
   color: ${theme.colors.textSecondary};
   font-size: 14px;
+  font-weight: 400;
+  transition: all ${theme.transitions.buttonHover};
 
   &:hover {
     background-color: ${theme.colors.background};
+    color: ${theme.colors.primary};
   }
 `
 
 const SubmitButton = styled.button`
-  padding: 8px 16px;
+  padding: 12px 24px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   background-color: ${theme.colors.accent};
   color: white;
   font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  transition: all ${theme.transitions.buttonHover};
 
   &:hover {
-    background-color: #238277;
+    background-color: #6B8A82;
   }
 
   &:disabled {
     background-color: ${theme.colors.border};
+    color: ${theme.colors.textSecondary};
     cursor: not-allowed;
   }
 `
@@ -170,7 +192,7 @@ export function AddWorkModal({ isOpen, onClose, onSubmit }: AddWorkModalProps) {
       <Modal onClick={(e) => e.stopPropagation()} onKeyDown={handleKeyDown}>
         <Title>添加作品</Title>
         <FormGroup>
-          <Label>标题 *</Label>
+          <Label>标题</Label>
           <Input
             ref={inputRef}
             value={title}
@@ -179,7 +201,7 @@ export function AddWorkModal({ isOpen, onClose, onSubmit }: AddWorkModalProps) {
           />
         </FormGroup>
         <FormGroup>
-          <Label>链接 *</Label>
+          <Label>链接</Label>
           <Input
             value={url}
             onChange={(e) => setUrl(e.target.value)}

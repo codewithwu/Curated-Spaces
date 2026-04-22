@@ -7,6 +7,9 @@ dist/
 # Brainstorming session files
 .superpowers/
 
+# Personal files
+JD.txt
+
 # Editor and OS files
 .DS_Store
 *.swp

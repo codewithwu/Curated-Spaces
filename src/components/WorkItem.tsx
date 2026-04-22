@@ -55,6 +55,12 @@ const Title = styled.h4`
   line-height: 1.4;
 `
 
+const UrlPrefix = styled.span`
+  font-size: 12px;
+  color: ${theme.colors.textSecondary};
+  margin-right: 4px;
+`
+
 const Url = styled.a`
   font-size: 12px;
   color: ${theme.colors.accent};
@@ -206,6 +212,7 @@ export function WorkItem({ work, onUpdate, onDelete }: WorkItemProps) {
         ×
       </DeleteButton>
       <Title>{work.title}</Title>
+      <UrlPrefix>github地址：</UrlPrefix>
       <Url href={work.url} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
         {work.url}
       </Url>

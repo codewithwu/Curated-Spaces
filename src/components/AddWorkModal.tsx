@@ -205,7 +205,7 @@ export function AddWorkModal({ isOpen, onClose, onSubmit }: AddWorkModalProps) {
           <Input
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            placeholder="https://..."
+            placeholder="github地址："
           />
         </FormGroup>
         <FormGroup>

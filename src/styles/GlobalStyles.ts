@@ -2,13 +2,7 @@ import { createGlobalStyle } from 'styled-components'
 import { theme } from './theme'
 
 export const GlobalStyles = createGlobalStyle`
-  @font-face {
-    font-family: 'Noto Sans SC';
-    src: url('/fonts/NotoSansSC-Regular.otf') format('opentype');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-  }
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600&family=Noto+Sans+SC:wght@300;400;500&display=swap');
 
   * {
     margin: 0;
@@ -25,13 +19,14 @@ export const GlobalStyles = createGlobalStyle`
     font-weight: 400;
     background-color: ${theme.colors.background};
     color: ${theme.colors.textPrimary};
-    line-height: 1.7;
+    line-height: 1.8;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    letter-spacing: 0.01em;
+    letter-spacing: 0.02em;
+    min-height: 100vh;
   }
 
-  /* Subtle noise texture overlay for depth */
+  /* Subtle grain texture overlay */
   body::before {
     content: '';
     position: fixed;
@@ -40,8 +35,8 @@ export const GlobalStyles = createGlobalStyle`
     width: 100%;
     height: 100%;
     pointer-events: none;
-    opacity: 0.015;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
     z-index: 9999;
   }
 
@@ -51,7 +46,7 @@ export const GlobalStyles = createGlobalStyle`
     transition: color ${theme.transitions.buttonHover};
 
     &:hover {
-      color: #5A7A72;
+      color: ${theme.colors.accentLight};
     }
   }
 
@@ -67,28 +62,67 @@ export const GlobalStyles = createGlobalStyle`
     letter-spacing: inherit;
   }
 
-  /* Custom scrollbar */
+  /* Custom scrollbar - refined styling */
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    background: transparent;
+    background: ${theme.colors.background};
   }
 
   ::-webkit-scrollbar-thumb {
-    background: ${theme.colors.border};
-    border-radius: 3px;
+    background: ${theme.colors.borderDark};
+    border-radius: 4px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: ${theme.colors.textSecondary};
+    background: ${theme.colors.textMuted};
   }
 
   /* Selection color */
   ::selection {
     background: ${theme.colors.accent};
     color: white;
+  }
+
+  /* Page load animation keyframes */
+  @keyframes fadeSlideUp {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes scaleFadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes slideInFromRight {
+    from {
+      opacity: 0;
+      transform: translateX(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
 `

@@ -1,6 +1,22 @@
 import { useState, useEffect, useRef } from 'react'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { theme } from '../styles/theme'
+
+const fadeIn = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`
+
+const scaleIn = keyframes`
+  from {
+    transform: scale(0.96) translateY(8px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+`
 
 const Overlay = styled.div`
   position: fixed;
@@ -8,59 +24,44 @@ const Overlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(44, 44, 44, 0.4);
-  backdrop-filter: blur(4px);
+  background-color: ${theme.colors.overlay};
+  backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  animation: fadeIn 200ms ease-out;
-
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
+  animation: ${fadeIn} 200ms ease-out;
 `
 
 const Modal = styled.div`
   background-color: ${theme.colors.surface};
   border-radius: ${theme.borderRadius.modal}px;
-  padding: 32px;
-  width: 480px;
+  padding: 36px;
+  width: 500px;
   max-width: 90vw;
   box-shadow: ${theme.shadows.modal};
-  animation: scaleIn 250ms cubic-bezier(0.4, 0, 0.2, 1);
-
-  @keyframes scaleIn {
-    from {
-      transform: scale(0.96);
-      opacity: 0;
-    }
-    to {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
+  animation: ${scaleIn} 300ms cubic-bezier(0.4, 0, 0.2, 1);
 `
 
 const Title = styled.h3`
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 500;
   color: ${theme.colors.primary};
-  margin-bottom: 24px;
-  letter-spacing: 0.01em;
+  margin-bottom: 28px;
+  letter-spacing: 0.02em;
 `
 
 const FormGroup = styled.div`
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 `
 
 const Label = styled.label`
   display: block;
   font-size: 12px;
   color: ${theme.colors.textSecondary};
-  margin-bottom: 6px;
-  letter-spacing: 0.03em;
+  margin-bottom: 8px;
+  letter-spacing: 0.05em;
+  font-weight: 500;
   text-transform: uppercase;
 `
 
@@ -68,7 +69,7 @@ const Input = styled.input`
   width: 100%;
   padding: 14px 16px;
   border: 1.5px solid ${theme.colors.border};
-  border-radius: 10px;
+  border-radius: ${theme.borderRadius.input}px;
   font-size: 14px;
   background-color: ${theme.colors.background};
   transition: all ${theme.transitions.buttonHover};
@@ -77,10 +78,11 @@ const Input = styled.input`
     outline: none;
     border-color: ${theme.colors.accent};
     background-color: ${theme.colors.surface};
+    box-shadow: 0 0 0 4px rgba(139, 115, 85, 0.1);
   }
 
   &::placeholder {
-    color: ${theme.colors.textSecondary};
+    color: ${theme.colors.textMuted};
   }
 `
 
@@ -88,7 +90,7 @@ const Textarea = styled.textarea`
   width: 100%;
   padding: 14px 16px;
   border: 1.5px solid ${theme.colors.border};
-  border-radius: 10px;
+  border-radius: ${theme.borderRadius.input}px;
   font-size: 14px;
   resize: vertical;
   min-height: 100px;
@@ -99,24 +101,25 @@ const Textarea = styled.textarea`
     outline: none;
     border-color: ${theme.colors.accent};
     background-color: ${theme.colors.surface};
+    box-shadow: 0 0 0 4px rgba(139, 115, 85, 0.1);
   }
 
   &::placeholder {
-    color: ${theme.colors.textSecondary};
+    color: ${theme.colors.textMuted};
   }
 `
 
 const ButtonGroup = styled.div`
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
-  margin-top: 24px;
+  gap: 10px;
+  margin-top: 28px;
 `
 
 const CancelButton = styled.button`
-  padding: 12px 20px;
-  border: none;
-  border-radius: 8px;
+  padding: 12px 22px;
+  border: 1px solid ${theme.colors.border};
+  border-radius: ${theme.borderRadius.button}px;
   background-color: transparent;
   color: ${theme.colors.textSecondary};
   font-size: 14px;
@@ -124,16 +127,17 @@ const CancelButton = styled.button`
   transition: all ${theme.transitions.buttonHover};
 
   &:hover {
-    background-color: ${theme.colors.background};
+    border-color: ${theme.colors.borderDark};
+    background-color: ${theme.colors.highlight};
     color: ${theme.colors.primary};
   }
 `
 
 const SubmitButton = styled.button`
-  padding: 12px 24px;
+  padding: 12px 28px;
   border: none;
-  border-radius: 8px;
-  background-color: ${theme.colors.accent};
+  border-radius: ${theme.borderRadius.button}px;
+  background: linear-gradient(135deg, ${theme.colors.accent} 0%, ${theme.colors.accentLight} 100%);
   color: white;
   font-size: 14px;
   font-weight: 400;
@@ -141,13 +145,16 @@ const SubmitButton = styled.button`
   transition: all ${theme.transitions.buttonHover};
 
   &:hover {
-    background-color: #6B8A82;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(139, 115, 85, 0.3);
   }
 
   &:disabled {
-    background-color: ${theme.colors.border};
-    color: ${theme.colors.textSecondary};
+    background: ${theme.colors.border};
+    color: ${theme.colors.textMuted};
     cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
   }
 `
 

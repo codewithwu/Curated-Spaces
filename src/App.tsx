@@ -16,23 +16,25 @@ const ADMIN_PASSWORD = 'helloworld' // 可在此修改密码
 
 const FooterButton = styled.a`
   position: fixed;
-  bottom: 32px;
+  bottom: 36px;
   left: 50%;
   transform: translateX(-50%);
-  padding: 10px 20px;
-  background-color: ${theme.colors.surface};
-  border: 1px solid ${theme.colors.border};
-  border-radius: 8px;
-  color: ${theme.colors.textSecondary};
+  padding: 12px 28px;
+  background: linear-gradient(135deg, ${theme.colors.accent} 0%, ${theme.colors.accentLight} 100%);
+  border: none;
+  border-radius: 40px;
+  color: white;
   font-size: 13px;
+  font-weight: 400;
   text-decoration: none;
-  box-shadow: ${theme.shadows.card};
+  box-shadow: ${theme.shadows.float};
   transition: all ${theme.transitions.buttonHover};
   z-index: 100;
+  letter-spacing: 0.02em;
 
   &:hover {
-    border-color: ${theme.colors.accent};
-    color: ${theme.colors.accent};
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow: 0 8px 32px rgba(139, 115, 85, 0.4);
   }
 `
 

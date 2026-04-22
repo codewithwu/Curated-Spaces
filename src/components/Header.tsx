@@ -4,70 +4,67 @@ import { theme } from '../styles/theme'
 import type { PortfolioData } from '../types'
 
 const HeaderWrapper = styled.header`
-  padding: ${theme.spacing.pagePadding}px;
-  padding-bottom: 32px;
+  padding: 32px ${theme.spacing.pagePadding}px;
   background-color: ${theme.colors.background};
   position: relative;
-`
-
-const HeaderLine = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: ${theme.spacing.pagePadding}px;
-  right: ${theme.spacing.pagePadding}px;
-  height: 1px;
-  background: linear-gradient(
-    to right,
-    transparent,
-    ${theme.colors.border} 20%,
-    ${theme.colors.border} 80%,
-    transparent
-  );
+  border-bottom: 1px solid ${theme.colors.border};
 `
 
 const HeaderContent = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
 `
 
-const TitleGroup = styled.div``
+const TitleGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`
 
 const Title = styled.h1`
   font-size: 13px;
   font-weight: 400;
   color: ${theme.colors.textSecondary};
-  letter-spacing: 0.15em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
 `
 
 const Subtitle = styled.span`
-  font-size: 13px;
-  color: ${theme.colors.textSecondary};
-  margin-left: 16px;
-  opacity: 0.6;
+  font-size: 12px;
+  color: ${theme.colors.textMuted};
+  letter-spacing: 0.08em;
+  font-weight: 300;
 `
 
 const Actions = styled.div`
   display: flex;
-  gap: 12px;
+  gap: 8px;
 `
 
 const ActionButton = styled.button`
-  background: none;
+  background: ${theme.colors.surface};
   border: 1px solid ${theme.colors.border};
   color: ${theme.colors.textSecondary};
-  padding: 6px 12px;
+  padding: 8px 16px;
   font-size: 12px;
   cursor: pointer;
   display: flex;
   align-items: center;
   gap: 6px;
-  transition: all 0.2s ease;
+  transition: all ${theme.transitions.buttonHover};
+  border-radius: ${theme.borderRadius.button}px;
 
   &:hover {
-    background: ${theme.colors.border};
-    color: ${theme.colors.textPrimary};
+    border-color: ${theme.colors.accent};
+    color: ${theme.colors.accent};
+    background: ${theme.colors.highlight};
+  }
+
+  svg {
+    opacity: 0.7;
   }
 `
 
@@ -105,7 +102,6 @@ export function Header({ isLocked, onLock, onExport, onImport }: HeaderProps) {
     }
     reader.readAsText(file)
 
-    // reset input
     e.target.value = ''
   }
 
@@ -113,21 +109,12 @@ export function Header({ isLocked, onLock, onExport, onImport }: HeaderProps) {
     <HeaderWrapper>
       <HeaderContent>
         <TitleGroup>
-          <Title>
-            作品集
-            <Subtitle>Portfolio</Subtitle>
-          </Title>
+          <Title>作品集</Title>
+          <Subtitle>Portfolio Showcase</Subtitle>
         </TitleGroup>
         <Actions>
           <ActionButton onClick={handleExportClick}>
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
               <polyline points="7 10 12 15 17 10" />
               <line x1="12" y1="15" x2="12" y2="3" />
@@ -135,14 +122,7 @@ export function Header({ isLocked, onLock, onExport, onImport }: HeaderProps) {
             导出
           </ActionButton>
           <ActionButton onClick={handleImportClick}>
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
               <polyline points="17 8 12 3 7 8" />
               <line x1="12" y1="3" x2="12" y2="15" />
@@ -151,14 +131,7 @@ export function Header({ isLocked, onLock, onExport, onImport }: HeaderProps) {
           </ActionButton>
           {!isLocked && (
             <ActionButton onClick={onLock}>
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
                 <path d="M7 11V7a5 5 0 0 1 10 0v4" />
               </svg>
@@ -167,7 +140,6 @@ export function Header({ isLocked, onLock, onExport, onImport }: HeaderProps) {
           )}
         </Actions>
       </HeaderContent>
-      <HeaderLine />
       <input
         ref={fileInputRef}
         type="file"

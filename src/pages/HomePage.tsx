@@ -1,87 +1,135 @@
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { theme } from '../styles/theme'
 import { useNavigate } from 'react-router-dom'
+
+const fadeSlideUp = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`
+
+const shimmer = keyframes`
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+`
 
 const HomeWrapper = styled.div`
   min-height: 100vh;
   background-color: ${theme.colors.background};
-  padding: 80px 48px 120px;
+  padding: 0;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
 `
 
 const ResumeContainer = styled.div`
-  max-width: 850px;
+  max-width: 900px;
   width: 100%;
   background-color: ${theme.colors.surface};
-  border-radius: ${theme.borderRadius.card}px;
-  padding: 60px;
-  box-shadow: ${theme.shadows.card};
-
-  @media (max-width: 767px) {
-    padding: 32px 24px;
-  }
+  min-height: 100vh;
+  box-shadow: none;
+  animation: ${fadeSlideUp} 800ms cubic-bezier(0.4, 0, 0.2, 1) both;
 `
 
 const Header = styled.div`
   text-align: center;
-  margin-bottom: 48px;
-  padding-bottom: 32px;
-  border-bottom: 2px solid ${theme.colors.border};
+  padding: 80px 60px 60px;
+  border-bottom: 1px solid ${theme.colors.border};
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, ${theme.colors.accent}, ${theme.colors.accentLight}, ${theme.colors.accent});
+    background-size: 200% 100%;
+    animation: ${shimmer} 3s linear infinite;
+  }
 `
 
 const Name = styled.h1`
-  font-size: 36px;
-  font-weight: 700;
+  font-size: 42px;
+  font-weight: 600;
   color: ${theme.colors.primary};
-  margin-bottom: 12px;
-  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+  letter-spacing: 0.12em;
+  animation: ${fadeSlideUp} 800ms cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation-delay: 100ms;
 `
 
 const Title = styled.p`
   font-size: 18px;
   color: ${theme.colors.accent};
-  letter-spacing: 0.15em;
-  margin-bottom: 20px;
-  font-weight: 500;
+  letter-spacing: 0.2em;
+  margin-bottom: 28px;
+  font-weight: 400;
+  animation: ${fadeSlideUp} 800ms cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation-delay: 200ms;
 `
 
 const ContactRow = styled.div`
   display: flex;
   justify-content: center;
-  gap: 24px;
+  gap: 28px;
   flex-wrap: wrap;
   font-size: 13px;
   color: ${theme.colors.textSecondary};
-`
+  letter-spacing: 0.03em;
+  font-weight: 300;
+  animation: ${fadeSlideUp} 800ms cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation-delay: 300ms;
 
-const Section = styled.section`
-  margin-bottom: 36px;
-`
-
-const SectionTitle = styled.h2`
-  font-size: 16px;
-  font-weight: 600;
-  color: ${theme.colors.primary};
-  margin-bottom: 16px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid ${theme.colors.border};
-  letter-spacing: 0.05em;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  &::before {
-    content: '';
-    width: 4px;
-    height: 16px;
-    background-color: ${theme.colors.accent};
-    border-radius: 2px;
+  span {
+    padding: 4px 12px;
+    background: ${theme.colors.highlight};
+    border-radius: 20px;
   }
 `
 
+const Section = styled.section`
+  padding: 48px 60px;
+  border-bottom: 1px solid ${theme.colors.border};
+  animation: ${fadeSlideUp} 800ms cubic-bezier(0.4, 0, 0.2, 1) both;
+
+  &:nth-of-type(2) { animation-delay: 400ms; }
+  &:nth-of-type(3) { animation-delay: 500ms; }
+  &:nth-of-type(4) { animation-delay: 600ms; }
+`
+
+const SectionTitle = styled.h2`
+  font-size: 14px;
+  font-weight: 500;
+  color: ${theme.colors.primary};
+  margin-bottom: 28px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid ${theme.colors.accent};
+  letter-spacing: 0.1em;
+  display: inline-block;
+  text-transform: uppercase;
+`
+
 const AdvantageItem = styled.div`
-  margin-bottom: 24px;
+  margin-bottom: 32px;
+  padding-left: 20px;
+  border-left: 3px solid ${theme.colors.border};
+  transition: border-color ${theme.transitions.buttonHover};
+
+  &:hover {
+    border-left-color: ${theme.colors.accent};
+  }
 
   &:last-child {
     margin-bottom: 0;
@@ -89,27 +137,39 @@ const AdvantageItem = styled.div`
 `
 
 const AdvantageTitle = styled.h3`
-  font-size: 14px;
-  font-weight: 600;
-  color: ${theme.colors.textPrimary};
-  margin-bottom: 12px;
-  padding-left: 12px;
-  border-left: 3px solid ${theme.colors.accent};
+  font-size: 16px;
+  font-weight: 500;
+  color: ${theme.colors.primary};
+  margin-bottom: 14px;
+  padding-left: 14px;
+  border-left: 2px solid ${theme.colors.accent};
 `
 
 const AdvantageContent = styled.p`
-  font-size: 13px;
+  font-size: 14px;
   color: ${theme.colors.textSecondary};
-  line-height: 1.9;
-  margin-bottom: 8px;
+  line-height: 2;
+  margin-bottom: 10px;
+  font-weight: 300;
+
+  strong {
+    color: ${theme.colors.primary};
+    font-weight: 500;
+  }
 `
 
 const ExperienceCard = styled.div`
-  background-color: ${theme.colors.background};
-  border-radius: 8px;
-  padding: 20px 24px;
-  margin-bottom: 20px;
+  background-color: ${theme.colors.highlight};
+  border-radius: ${theme.borderRadius.card}px;
+  padding: 28px 32px;
+  margin-bottom: 24px;
   border: 1px solid ${theme.colors.border};
+  transition: all ${theme.transitions.cardHover};
+
+  &:hover {
+    box-shadow: ${theme.shadows.card};
+    border-color: ${theme.colors.borderDark};
+  }
 
   &:last-child {
     margin-bottom: 0;
@@ -120,50 +180,58 @@ const ExperienceHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 12px;
 `
 
 const ExperienceTitle = styled.span`
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 500;
   color: ${theme.colors.primary};
 `
 
 const ExperienceDate = styled.span`
   font-size: 12px;
-  color: ${theme.colors.textSecondary};
+  color: ${theme.colors.textMuted};
   background-color: ${theme.colors.surface};
-  padding: 2px 8px;
-  border-radius: 4px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  letter-spacing: 0.04em;
 `
 
 const ExperienceCompany = styled.p`
-  font-size: 13px;
+  font-size: 14px;
   color: ${theme.colors.accent};
-  margin-bottom: 12px;
-  font-weight: 500;
+  margin-bottom: 16px;
+  font-weight: 400;
 `
 
 const ExperienceDesc = styled.ul`
   margin: 0;
   padding-left: 20px;
-  font-size: 13px;
-  color: ${theme.colors.textPrimary};
-  line-height: 1.8;
+  font-size: 14px;
+  color: ${theme.colors.textSecondary};
+  line-height: 1.9;
+  font-weight: 300;
 
   li {
-    margin-bottom: 6px;
+    margin-bottom: 8px;
   }
 `
 
 const ProjectCard = styled.div`
-  background-color: ${theme.colors.background};
-  border-radius: 8px;
-  padding: 20px 24px;
-  margin-bottom: 20px;
+  background-color: ${theme.colors.highlight};
+  border-radius: ${theme.borderRadius.card}px;
+  padding: 28px 32px;
+  margin-bottom: 24px;
   border: 1px solid ${theme.colors.border};
+  transition: all ${theme.transitions.cardHover};
+
+  &:hover {
+    box-shadow: ${theme.shadows.card};
+    border-color: ${theme.colors.borderDark};
+  }
 
   &:last-child {
     margin-bottom: 0;
@@ -174,33 +242,39 @@ const ProjectHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 12px;
 `
 
 const ProjectTitle = styled.span`
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 500;
   color: ${theme.colors.primary};
 `
 
 const ProjectDate = styled.span`
   font-size: 12px;
-  color: ${theme.colors.textSecondary};
+  color: ${theme.colors.textMuted};
 `
 
 const ProjectOverview = styled.p`
-  font-size: 13px;
+  font-size: 14px;
   color: ${theme.colors.textSecondary};
-  margin-bottom: 12px;
-  line-height: 1.7;
+  margin-bottom: 16px;
+  line-height: 1.8;
+  font-weight: 300;
 `
 
 const ProjectItem = styled.div`
-  margin-bottom: 14px;
-  padding-left: 16px;
+  margin-bottom: 20px;
+  padding-left: 18px;
   border-left: 2px solid ${theme.colors.border};
+  transition: border-color ${theme.transitions.buttonHover};
+
+  &:hover {
+    border-left-color: ${theme.colors.accent};
+  }
 
   &:last-child {
     margin-bottom: 0;
@@ -208,40 +282,49 @@ const ProjectItem = styled.div`
 `
 
 const ProjectItemTitle = styled.h4`
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
-  color: ${theme.colors.textPrimary};
-  margin-bottom: 8px;
+  color: ${theme.colors.primary};
+  margin-bottom: 10px;
 `
 
 const ProjectItemContent = styled.p`
-  font-size: 12px;
+  font-size: 13px;
   color: ${theme.colors.textSecondary};
-  line-height: 1.7;
+  line-height: 1.85;
+  font-weight: 300;
+
+  strong {
+    color: ${theme.colors.primary};
+    font-weight: 500;
+  }
 `
 
 const FooterButton = styled.button`
   position: fixed;
-  bottom: 32px;
+  bottom: 40px;
   left: 50%;
   transform: translateX(-50%);
-  padding: 14px 32px;
-  background-color: ${theme.colors.accent};
+  padding: 16px 36px;
+  background: linear-gradient(135deg, ${theme.colors.accent} 0%, ${theme.colors.accentLight} 100%);
   border: none;
-  border-radius: 8px;
+  border-radius: 40px;
   color: white;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
   cursor: pointer;
-  box-shadow: ${theme.shadows.card};
+  box-shadow: ${theme.shadows.float};
   transition: all ${theme.transitions.buttonHover};
   z-index: 100;
   letter-spacing: 0.05em;
 
   &:hover {
-    background-color: #6B8A82;
-    box-shadow: ${theme.shadows.cardHover};
-    transform: translateX(-50%) translateY(-2px);
+    transform: translateX(-50%) translateY(-3px);
+    box-shadow: 0 8px 32px rgba(139, 115, 85, 0.4);
+  }
+
+  &:active {
+    transform: translateX(-50%) translateY(0);
   }
 `
 
@@ -255,12 +338,11 @@ export function HomePage() {
           <Name>武鑫</Name>
           <Title>AI Agent 开发工程师</Title>
           <ContactRow>
-            <span>📧 13169578613@wo.cn</span>
-            <span>📱 13169578613</span>
-            <span>👤 男</span>
-            <span>💼 9年工作经验</span>
-            <span>🎯 AI Agent 开发工程师</span>
-            <span>📍 深圳</span>
+            <span>13169578613@wo.cn</span>
+            <span>13169578613</span>
+            <span>男</span>
+            <span>9年工作经验</span>
+            <span>深圳</span>
           </ContactRow>
         </Header>
 
@@ -468,7 +550,7 @@ export function HomePage() {
       </ResumeContainer>
 
       <FooterButton onClick={() => navigate('/portfolio')}>
-        前往我的案例库
+        前往我的案例库 →
       </FooterButton>
     </HomeWrapper>
   )

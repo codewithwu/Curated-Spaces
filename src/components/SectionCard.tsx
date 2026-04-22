@@ -50,6 +50,20 @@ const SectionTitle = styled.h3`
   letter-spacing: 0.02em;
 `
 
+const SectionTitleInput = styled.input`
+  font-size: 15px;
+  font-weight: 500;
+  color: ${theme.colors.primary};
+  letter-spacing: 0.02em;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid ${theme.colors.accent};
+  outline: none;
+  padding: 0;
+  width: 100%;
+  max-width: 200px;
+`
+
 const WorkCount = styled.span`
   font-size: 11px;
   color: ${theme.colors.textSecondary};
@@ -137,6 +151,7 @@ interface SectionCardProps {
   onUpdateWork: (workId: string, updates: Partial<Omit<Work, 'id'>>) => void
   onDeleteWork: (workId: string) => void
   onUpdateSize: (width: number, height: number) => void
+  onUpdateSection: (name: string) => void
 }
 
 export function SectionCard({
@@ -146,9 +161,13 @@ export function SectionCard({
   onUpdateWork,
   onDeleteWork,
   onUpdateSize,
+  onUpdateSection,
 }: SectionCardProps) {
   const cardRef = useRef<HTMLDivElement>(null)
   const [isResizing, setIsResizing] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
+  const [editName, setEditName] = useState(section.name)
+  const titleInputRef = useRef<HTMLInputElement>(null)
   const resizeStartRef = useRef({ x: 0, y: 0, width: 0, height: 0 })
 
   const handleMouseDown = useCallback(
@@ -196,13 +215,51 @@ export function SectionCard({
     }
   }, [isResizing, onUpdateSize])
 
+  useEffect(() => {
+    if (isEditing) {
+      titleInputRef.current?.focus()
+      titleInputRef.current?.select()
+    }
+  }, [isEditing])
+
+  const handleTitleClick = () => {
+    setEditName(section.name)
+    setIsEditing(true)
+  }
+
+  const handleTitleBlur = () => {
+    setIsEditing(false)
+    if (editName.trim() && editName !== section.name) {
+      onUpdateSection(editName.trim())
+    }
+  }
+
+  const handleTitleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleTitleBlur()
+    } else if (e.key === 'Escape') {
+      setEditName(section.name)
+      setIsEditing(false)
+    }
+  }
+
   const workCount = section.works.length
 
   return (
     <CardContainer>
       <CardWrapper ref={cardRef} $width={section.width} $height={section.height}>
         <CardHeader>
-          <SectionTitle>{section.name}</SectionTitle>
+          {isEditing ? (
+            <SectionTitleInput
+              ref={titleInputRef}
+              value={editName}
+              onChange={(e) => setEditName(e.target.value)}
+              onBlur={handleTitleBlur}
+              onKeyDown={handleTitleKeyDown}
+            />
+          ) : (
+            <SectionTitle onClick={handleTitleClick}>{section.name}</SectionTitle>
+          )}
           <WorkCount>{workCount} {workCount === 1 ? '项' : '项'}</WorkCount>
           <DeleteSectionButton className="delete-btn" onClick={onDelete}>
             ×

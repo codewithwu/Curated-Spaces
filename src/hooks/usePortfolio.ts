@@ -50,6 +50,18 @@ export function usePortfolio() {
     [setData]
   )
 
+  const updateSection = useCallback(
+    (sectionId: string, name: string) => {
+      setData((prev) => ({
+        ...prev,
+        sections: prev.sections.map((s) =>
+          s.id === sectionId ? { ...s, name } : s
+        ),
+      }))
+    },
+    [setData]
+  )
+
   const addWork = useCallback(
     (sectionId: string, title: string, url: string, previewUrl: string, description: string) => {
       const newWork: Work = {
@@ -118,6 +130,7 @@ export function usePortfolio() {
     addSection,
     deleteSection,
     updateSectionSize,
+    updateSection,
     addWork,
     updateWork,
     deleteWork,

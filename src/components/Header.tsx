@@ -72,30 +72,21 @@ const ActionButton = styled.button`
 `
 
 interface HeaderProps {
-  exportData: () => PortfolioData
-  importData: (data: PortfolioData) => void
+  isLocked: boolean
+  onLock: () => void
+  onExport: () => void
+  onImport: () => void
 }
 
-export function Header({ exportData, importData }: HeaderProps) {
+export function Header({ isLocked, onLock, onExport, onImport }: HeaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const handleExport = () => {
-    const data = exportData()
-    const blob = new Blob([JSON.stringify(data, null, 2)], {
-      type: 'application/json',
-    })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = 'portfolio.json'
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
+  const handleExportClick = () => {
+    onExport()
   }
 
   const handleImportClick = () => {
-    fileInputRef.current?.click()
+    onImport()
   }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,14 +96,11 @@ export function Header({ exportData, importData }: HeaderProps) {
     const reader = new FileReader()
     reader.onload = (event) => {
       try {
-        const data = JSON.parse(event.target?.result as string) as PortfolioData
-        if (data && data.version === 1 && Array.isArray(data.sections)) {
-          importData(data)
-        } else {
-          alert('无效的 Portfolio 数据格式')
-        }
+        JSON.parse(event.target?.result as string) as PortfolioData
       } catch {
         alert('无法解析 JSON 文件')
+        e.target.value = ''
+        return
       }
     }
     reader.readAsText(file)
@@ -131,7 +119,7 @@ export function Header({ exportData, importData }: HeaderProps) {
           </Title>
         </TitleGroup>
         <Actions>
-          <ActionButton onClick={handleExport}>
+          <ActionButton onClick={handleExportClick}>
             <svg
               width="14"
               height="14"
@@ -161,6 +149,22 @@ export function Header({ exportData, importData }: HeaderProps) {
             </svg>
             导入
           </ActionButton>
+          {!isLocked && (
+            <ActionButton onClick={onLock}>
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+              锁定
+            </ActionButton>
+          )}
         </Actions>
       </HeaderContent>
       <HeaderLine />

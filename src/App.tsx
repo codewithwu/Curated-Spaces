@@ -1,13 +1,40 @@
 import { useState, useEffect } from 'react'
+import styled from 'styled-components'
 import { Header } from './components/Header'
 import { SectionGrid } from './components/SectionGrid'
 import { FloatingButton } from './components/FloatingButton'
 import { AddSectionModal } from './components/AddSectionModal'
 import { AddWorkModal } from './components/AddWorkModal'
+import { PasswordModal } from './components/PasswordModal'
 import { usePortfolio } from './hooks/usePortfolio'
+import { theme } from './styles/theme'
 import type { PortfolioData } from './types'
 
 const INITIAL_DATA_KEY = 'portfolio_initialized'
+const AUTH_KEY = 'portfolio_auth'
+const ADMIN_PASSWORD = 'helloworld' // 可在此修改密码
+
+const FooterButton = styled.a`
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  background-color: ${theme.colors.surface};
+  border: 1px solid ${theme.colors.border};
+  border-radius: 8px;
+  color: ${theme.colors.textSecondary};
+  font-size: 13px;
+  text-decoration: none;
+  box-shadow: ${theme.shadows.card};
+  transition: all ${theme.transitions.buttonHover};
+  z-index: 100;
+
+  &:hover {
+    border-color: ${theme.colors.accent};
+    color: ${theme.colors.accent};
+  }
+`
 
 export default function App() {
   const {
@@ -15,6 +42,7 @@ export default function App() {
     addSection,
     deleteSection,
     updateSectionSize,
+    updateSection,
     addWork,
     updateWork,
     deleteWork,
@@ -24,8 +52,13 @@ export default function App() {
 
   const [isSectionModalOpen, setIsSectionModalOpen] = useState(false)
   const [isWorkModalOpen, setIsWorkModalOpen] = useState(false)
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false)
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null)
   const [initialDataLoaded, setInitialDataLoaded] = useState(false)
+  const [isLocked, setIsLocked] = useState(() => {
+    return sessionStorage.getItem(AUTH_KEY) !== 'true'
+  })
+  const [pendingAction, setPendingAction] = useState<'export' | 'import' | null>(null)
 
   useEffect(() => {
     if (!initialDataLoaded && sections.length === 0) {
@@ -72,18 +105,115 @@ export default function App() {
     updateSectionSize(sectionId, width, height)
   }
 
+  const handleUpdateSection = (sectionId: string, name: string) => {
+    updateSection(sectionId, name)
+  }
+
+  const handlePasswordSubmit = (password: string): boolean => {
+    if (password === ADMIN_PASSWORD) {
+      setIsLocked(false)
+      sessionStorage.setItem(AUTH_KEY, 'true')
+      setIsPasswordModalOpen(false)
+
+      // Execute pending action if any
+      if (pendingAction === 'export') {
+        handleExport()
+      } else if (pendingAction === 'import') {
+        handleImport()
+      }
+      setPendingAction(null)
+      return true
+    }
+    return false
+  }
+
+  const handleLock = () => {
+    setIsLocked(true)
+    sessionStorage.removeItem(AUTH_KEY)
+  }
+
+  const handleUnlockClick = () => {
+    setIsPasswordModalOpen(true)
+  }
+
+  const handleExport = () => {
+    if (isLocked) {
+      setPendingAction('export')
+      setIsPasswordModalOpen(true)
+      return
+    }
+    const data = exportData()
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: 'application/json',
+    })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'portfolio.json'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+
+  const handleImport = () => {
+    if (isLocked) {
+      setPendingAction('import')
+      setIsPasswordModalOpen(true)
+      return
+    }
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.accept = '.json'
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0]
+      if (!file) return
+
+      const reader = new FileReader()
+      reader.onload = (event) => {
+        try {
+          const data = JSON.parse(event.target?.result as string) as PortfolioData
+          if (data && data.version === 1 && Array.isArray(data.sections)) {
+            importData(data)
+          } else {
+            alert('无效的 Portfolio 数据格式')
+          }
+        } catch {
+          alert('无法解析 JSON 文件')
+        }
+      }
+      reader.readAsText(file)
+    }
+    input.click()
+  }
+
   return (
     <>
-      <Header exportData={exportData} importData={importData} />
+      <Header
+        isLocked={isLocked}
+        onLock={handleLock}
+        onExport={handleExport}
+        onImport={handleImport}
+      />
       <SectionGrid
         sections={sections}
-        onDeleteSection={handleDeleteSection}
-        onAddWork={handleOpenAddWork}
-        onUpdateWork={updateWork}
-        onDeleteWork={deleteWork}
+        onDeleteSection={isLocked ? () => {} : handleDeleteSection}
+        onAddWork={isLocked ? () => {} : handleOpenAddWork}
+        onUpdateWork={isLocked ? () => {} : updateWork}
+        onDeleteWork={isLocked ? () => {} : deleteWork}
         onUpdateSectionSize={handleUpdateSectionSize}
+        onUpdateSection={isLocked ? () => {} : handleUpdateSection}
       />
-      <FloatingButton onClick={() => setIsSectionModalOpen(true)} />
+      <FooterButton href="https://github.com/codewithwu" target="_blank" rel="noopener noreferrer">
+        更多实践应用前往我的Github主页
+      </FooterButton>
+      {isLocked ? (
+        <FooterButton as="button" onClick={handleUnlockClick} style={{ bottom: 90 }}>
+          解锁编辑
+        </FooterButton>
+      ) : (
+        <FloatingButton onClick={() => setIsSectionModalOpen(true)} />
+      )}
       <AddSectionModal
         isOpen={isSectionModalOpen}
         onClose={() => setIsSectionModalOpen(false)}
@@ -96,6 +226,11 @@ export default function App() {
           setActiveSectionId(null)
         }}
         onSubmit={handleAddWork}
+      />
+      <PasswordModal
+        isOpen={isPasswordModalOpen}
+        onSubmit={handlePasswordSubmit}
+        onClose={() => setIsPasswordModalOpen(false)}
       />
     </>
   )

@@ -64,6 +64,7 @@ interface SectionGridProps {
   onUpdateWork: (sectionId: string, workId: string, updates: Partial<Omit<Work, 'id'>>) => void
   onDeleteWork: (sectionId: string, workId: string) => void
   onUpdateSectionSize: (sectionId: string, width: number, height: number) => void
+  onUpdateSection: (sectionId: string, name: string) => void
 }
 
 export function SectionGrid({
@@ -73,6 +74,7 @@ export function SectionGrid({
   onUpdateWork,
   onDeleteWork,
   onUpdateSectionSize,
+  onUpdateSection,
 }: SectionGridProps) {
   if (sections.length === 0) {
     return (
@@ -97,6 +99,7 @@ export function SectionGrid({
           onUpdateWork={(workId, updates) => onUpdateWork(section.id, workId, updates)}
           onDeleteWork={(workId) => onDeleteWork(section.id, workId)}
           onUpdateSize={(width, height) => onUpdateSectionSize(section.id, width, height)}
+          onUpdateSection={(name) => onUpdateSection(section.id, name)}
         />
       ))}
     </Grid>

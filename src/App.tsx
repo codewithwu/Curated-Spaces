@@ -1,10 +1,13 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Header } from './components/Header'
 import { SectionGrid } from './components/SectionGrid'
 import { FloatingButton } from './components/FloatingButton'
 import { AddSectionModal } from './components/AddSectionModal'
 import { AddWorkModal } from './components/AddWorkModal'
 import { usePortfolio } from './hooks/usePortfolio'
+import type { PortfolioData } from './types'
+
+const INITIAL_DATA_KEY = 'portfolio_initialized'
 
 export default function App() {
   const {
@@ -15,11 +18,33 @@ export default function App() {
     addWork,
     updateWork,
     deleteWork,
+    exportData,
+    importData,
   } = usePortfolio()
 
   const [isSectionModalOpen, setIsSectionModalOpen] = useState(false)
   const [isWorkModalOpen, setIsWorkModalOpen] = useState(false)
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null)
+  const [initialDataLoaded, setInitialDataLoaded] = useState(false)
+
+  useEffect(() => {
+    if (!initialDataLoaded && sections.length === 0) {
+      fetch('/data/portfolio.json')
+        .then((res) => res.json())
+        .then((data: PortfolioData) => {
+          if (data && data.version === 1 && data.sections?.length > 0) {
+            importData(data)
+            sessionStorage.setItem(INITIAL_DATA_KEY, 'true')
+          }
+        })
+        .catch(() => {
+          // fallback to localStorage
+        })
+        .finally(() => {
+          setInitialDataLoaded(true)
+        })
+    }
+  }, [initialDataLoaded, sections.length, importData])
 
   const handleAddSection = (name: string) => {
     addSection(name)
@@ -49,7 +74,7 @@ export default function App() {
 
   return (
     <>
-      <Header />
+      <Header exportData={exportData} importData={importData} />
       <SectionGrid
         sections={sections}
         onDeleteSection={handleDeleteSection}

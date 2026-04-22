@@ -101,6 +101,17 @@ export function usePortfolio() {
     [setData]
   )
 
+  const exportData = useCallback((): PortfolioData => {
+    return { ...data }
+  }, [data])
+
+  const importData = useCallback(
+    (newData: PortfolioData) => {
+      setData(newData)
+    },
+    [setData]
+  )
+
   return {
     sections: data.sections,
     addSection,
@@ -109,5 +120,7 @@ export function usePortfolio() {
     addWork,
     updateWork,
     deleteWork,
+    exportData,
+    importData,
   }
 }

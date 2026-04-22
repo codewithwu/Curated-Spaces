@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "sections": [
+    {
+      "id": "example-section-1",
+      "name": "平面设计",
+      "works": [
+        {
+          "id": "example-work-1",
+          "title": "品牌视觉设计",
+          "url": "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800",
+          "description": "企业品牌形象设计，包含Logo、名片、信纸等全套VI设计"
+        },
+        {
+          "id": "example-work-2",
+          "title": "海报设计",
+          "url": "https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=800",
+          "description": "创意海报设计作品集"
+        }
+      ]
+    },
+    {
+      "id": "example-section-2",
+      "name": "插画艺术",
+      "works": [
+        {
+          "id": "example-work-3",
+          "title": "数字插画",
+          "url": "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800",
+          "description": "使用Procreate和Photoshop创作的数字插画作品"
+        }
+      ]
+    }
+  ]
+}

@@ -51,11 +51,12 @@ export function usePortfolio() {
   )
 
   const addWork = useCallback(
-    (sectionId: string, title: string, url: string, description: string) => {
+    (sectionId: string, title: string, url: string, previewUrl: string, description: string) => {
       const newWork: Work = {
         id: uuidv4(),
         title,
         url,
+        previewUrl: previewUrl || undefined,
         description,
       }
       setData((prev) => ({

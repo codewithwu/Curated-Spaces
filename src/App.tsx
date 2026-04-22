@@ -61,9 +61,9 @@ export default function App() {
     setIsWorkModalOpen(true)
   }
 
-  const handleAddWork = (title: string, url: string, description: string) => {
+  const handleAddWork = (title: string, url: string, previewUrl: string, description: string) => {
     if (activeSectionId) {
-      addWork(activeSectionId, title, url, description)
+      addWork(activeSectionId, title, url, previewUrl, description)
     }
     setActiveSectionId(null)
   }

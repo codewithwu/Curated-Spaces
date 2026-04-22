@@ -2,6 +2,7 @@ export interface Work {
   id: string
   title: string
   url: string
+  previewUrl?: string
   description: string
 }
 

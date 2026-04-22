@@ -154,12 +154,13 @@ const SubmitButton = styled.button`
 interface AddWorkModalProps {
   isOpen: boolean
   onClose: () => void
-  onSubmit: (title: string, url: string, description: string) => void
+  onSubmit: (title: string, url: string, previewUrl: string, description: string) => void
 }
 
 export function AddWorkModal({ isOpen, onClose, onSubmit }: AddWorkModalProps) {
   const [title, setTitle] = useState('')
   const [url, setUrl] = useState('')
+  const [previewUrl, setPreviewUrl] = useState('')
   const [description, setDescription] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
 
@@ -167,6 +168,7 @@ export function AddWorkModal({ isOpen, onClose, onSubmit }: AddWorkModalProps) {
     if (isOpen) {
       setTitle('')
       setUrl('')
+      setPreviewUrl('')
       setDescription('')
       setTimeout(() => inputRef.current?.focus(), 100)
     }
@@ -176,7 +178,7 @@ export function AddWorkModal({ isOpen, onClose, onSubmit }: AddWorkModalProps) {
 
   const handleSubmit = () => {
     if (title.trim() && url.trim()) {
-      onSubmit(title.trim(), url.trim(), description.trim())
+      onSubmit(title.trim(), url.trim(), previewUrl.trim(), description.trim())
       onClose()
     }
   }
@@ -206,6 +208,14 @@ export function AddWorkModal({ isOpen, onClose, onSubmit }: AddWorkModalProps) {
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="github地址："
+          />
+        </FormGroup>
+        <FormGroup>
+          <Label>在线预览（可选）</Label>
+          <Input
+            value={previewUrl}
+            onChange={(e) => setPreviewUrl(e.target.value)}
+            placeholder="在线预览地址"
           />
         </FormGroup>
         <FormGroup>

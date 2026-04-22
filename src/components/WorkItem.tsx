@@ -61,6 +61,16 @@ const UrlPrefix = styled.span`
   margin-right: 4px;
 `
 
+const PreviewUrlPrefix = styled.span`
+  font-size: 12px;
+  color: ${theme.colors.textSecondary};
+  margin-right: 4px;
+`
+
+const UrlLine = styled.div`
+  margin-top: 4px;
+`
+
 const Url = styled.a`
   font-size: 12px;
   color: ${theme.colors.accent};
@@ -216,6 +226,14 @@ export function WorkItem({ work, onUpdate, onDelete }: WorkItemProps) {
       <Url href={work.url} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
         {work.url}
       </Url>
+      {work.previewUrl && (
+        <UrlLine>
+          <PreviewUrlPrefix>在线预览：</PreviewUrlPrefix>
+          <Url href={work.previewUrl} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
+            {work.previewUrl}
+          </Url>
+        </UrlLine>
+      )}
       {work.description && <Description>{work.description}</Description>}
     </ItemWrapper>
   )

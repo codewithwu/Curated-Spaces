@@ -18,10 +18,16 @@
           "url": "https://github.com/codewithwu/article-to-image",
           "previewUrl": "https://article-to-image.vercel.app/",
           "description": "长文智能排版工具 — 将文章内容自动分割为精美的社交媒体图片，支持多模板、一键导出。\n\n功能特点\n智能分页：长文自动分割成适合阅读的图片，无需手动处理\n多模板选择：提供极简、商务、活力等多种风格模板\n一键导出：批量下载为高清 PNG 图片\nMarkdown 支持：支持 Markdown 格式输入，实时预览"
+        },
+        {
+          "id": "ce4c6b96-2cf4-41aa-a6e6-6bbb47933c28",
+          "title": "文字封面生成器",
+          "url": "https://github.com/codewithwu/text-to-cover#",
+          "description": "文字封面生成器 - 将文字渲染成精美封面图片"
         }
       ],
-      "width": 474,
-      "height": 676
+      "width": 375,
+      "height": 1025
     },
     {
       "id": "1a8dd376-d5a8-4935-8286-ae0b78afae21",

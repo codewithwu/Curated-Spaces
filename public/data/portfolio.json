@@ -3,7 +3,7 @@
   "sections": [
     {
       "id": "bd58075c-db73-4323-aee3-1c903ebb7f3a",
-      "name": "AI + 前端应用",
+      "name": "AI + 应用",
       "works": [
         {
           "id": "4f0f4efc-8ec2-4112-be47-bcefa9d8cc09",
@@ -44,8 +44,16 @@
           "title": "AGV智能运维助手",
           "url": "https://github.com/codewithwu/agv_ops_agent",
           "description": "基于 RAG（检索增强生成）技术，为 AGV 运维提供智能问答服务。\n\n功能特性\n用户认证：JWT 认证，支持注册、登录、登出、令牌刷新\n文档管理：上传 PDF、Markdown、TXT 文档，自动向量化存储\nRAG 智能问答：基于文档内容进行 AI 智能问答\n向量检索：支持 PGVector 向量数据库存储与检索\n前端界面：React + TypeScript + TailwindCSS 构建的现代化界面"
+        },
+        {
+          "id": "a73b091a-8ce9-413a-b75a-371df3824b32",
+          "title": "AI音乐生成服务",
+          "url": "https://github.com/codewithwu/heartmula-web-",
+          "description": "🎵 AI 音乐智能创作平台 - 基于 HeartMuLa 开源模型，通过歌词或标签即可创作专属音乐作品。"
         }
-      ]
+      ],
+      "width": 374,
+      "height": 1031
     },
     {
       "id": "1d8415fa-bd6a-4980-8c02-3810155640d3",

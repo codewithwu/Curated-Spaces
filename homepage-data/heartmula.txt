@@ -1,0 +1,2 @@
+name:HeartMula
+description:🎵 AI 音乐智能创作平台 - 基于 HeartMuLa 开源模型，通过歌词或标签即可创作专属音乐作品。

@@ -1,0 +1,2 @@
+name:AGV Ops Agent
+description:智能运维助手，基于 RAG（检索增强生成）技术，为 AGV 运维提供智能问答服务。

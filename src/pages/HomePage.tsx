@@ -1,6 +1,7 @@
 import styled, { keyframes } from 'styled-components'
 import { theme } from '../styles/theme'
 import { useNavigate } from 'react-router-dom'
+import projects from '../../homepage-data/projects.json'
 
 const fadeSlideUp = keyframes`
   from {
@@ -22,113 +23,70 @@ const HomeWrapper = styled.div`
   align-items: flex-start;
 `
 
-const ResumeContainer = styled.div`
-  max-width: 900px;
+const HomeContainer = styled.div`
+  max-width: 1200px;
   width: 100%;
-  background-color: ${theme.colors.surface};
-  min-height: 100vh;
-  box-shadow: none;
+  padding: 0 40px;
   animation: ${fadeSlideUp} 800ms cubic-bezier(0.4, 0, 0.2, 1) both;
 `
 
-const IntroSection = styled.div`
-  text-align: center;
-  padding: 100px 60px 80px;
-  animation: ${fadeSlideUp} 800ms cubic-bezier(0.4, 0, 0.2, 1) both;
-  animation-delay: 100ms;
-`
-
-const IntroTitle = styled.h1`
-  font-size: 48px;
-  font-weight: 600;
-  color: ${theme.colors.primary};
-  margin-bottom: 20px;
-  letter-spacing: 0.1em;
-`
-
-const IntroSubtitle = styled.p`
-  font-size: 20px;
-  color: ${theme.colors.accent};
-  letter-spacing: 0.15em;
-  margin-bottom: 48px;
-  font-weight: 400;
-`
-
-const TagRow = styled.div`
+const ProjectShowcase = styled.div`
   display: flex;
-  justify-content: center;
-  gap: 16px;
-  flex-wrap: wrap;
-  font-size: 13px;
-  color: ${theme.colors.textSecondary};
-  letter-spacing: 0.03em;
-  font-weight: 300;
-  margin-bottom: 60px;
-
-  span {
-    padding: 8px 20px;
-    background: ${theme.colors.highlight};
-    border-radius: 24px;
-    border: 1px solid ${theme.colors.border};
-  }
+  flex-direction: column;
+  gap: 60px;
+  padding: 80px 0;
 `
 
-const AdvantagesSection = styled.section`
-  padding: 60px;
+const ProjectItem = styled.div`
   animation: ${fadeSlideUp} 800ms cubic-bezier(0.4, 0, 0.2, 1) both;
-  animation-delay: 300ms;
+  animation-delay: ${(props) => props.$delay || '100ms'};
 `
 
-const AdvantagesGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 32px;
+const ProjectInfo = styled.div`
+  margin-bottom: 24px;
 `
 
-const AdvantageCard = styled.div`
-  background-color: ${theme.colors.highlight};
-  border-radius: ${theme.borderRadius.card}px;
-  padding: 32px;
-  border: 1px solid ${theme.colors.border};
-  transition: all ${theme.transitions.cardHover};
-
-  &:hover {
-    box-shadow: ${theme.shadows.card};
-    border-color: ${theme.colors.accent};
-    transform: translateY(-4px);
-  }
-`
-
-const AdvantageCardTitle = styled.h3`
-  font-size: 18px;
+const ProjectTitle = styled.h3`
+  font-size: 22px;
   font-weight: 500;
   color: ${theme.colors.primary};
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 2px solid ${theme.colors.accent};
+  margin-bottom: 10px;
 `
 
-const AdvantageCardContent = styled.ul`
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  font-size: 14px;
+const ProjectDescription = styled.p`
+  font-size: 15px;
   color: ${theme.colors.textSecondary};
-  line-height: 2;
+  line-height: 1.8;
   font-weight: 300;
+  margin: 0 0 16px 0;
+`
 
-  li {
-    position: relative;
-    padding-left: 20px;
-    margin-bottom: 8px;
+const ProjectLink = styled.a`
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: ${theme.colors.accent};
+  text-decoration: none;
+  font-weight: 400;
+  transition: color ${theme.transitions.default};
 
-    &::before {
-      content: '•';
-      position: absolute;
-      left: 0;
-      color: ${theme.colors.accent};
-    }
+  &:hover {
+    color: ${theme.colors.accentLight};
   }
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+`
+
+const ProjectImage = styled.img`
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: ${theme.borderRadius.card}px;
+  box-shadow: ${theme.shadows.card};
 `
 
 const FooterButton = styled.button`
@@ -164,53 +122,28 @@ export function HomePage() {
 
   return (
     <HomeWrapper>
-      <ResumeContainer>
-        <IntroSection>
-          <IntroTitle>AI Agent 开发工程师</IntroTitle>
-          <IntroSubtitle>让 AI 在工业场景中真正落地</IntroSubtitle>
-          <TagRow>
-            <span>9年经验</span>
-            <span>LangGraph</span>
-            <span>RAG</span>
-            <span>Python</span>
-            <span>工业AGV</span>
-          </TagRow>
-        </IntroSection>
-
-        <AdvantagesSection>
-          <AdvantagesGrid>
-            <AdvantageCard>
-              <AdvantageCardTitle>Agent 架构设计与落地</AdvantageCardTitle>
-              <AdvantageCardContent>
-                <li>熟练掌握 LangGraph ReAct 工作流</li>
-                <li>自研强制检索机制，实现 0 幻觉</li>
-                <li>多节点状态机调度设计</li>
-                <li>AI 协作开发流程（Cursor + Claude）</li>
-              </AdvantageCardContent>
-            </AdvantageCard>
-
-            <AdvantageCard>
-              <AdvantageCardTitle>RAG 系统全栈优化</AdvantageCardTitle>
-              <AdvantageCardContent>
-                <li>PGVector 索引调优，召回率 95%+</li>
-                <li>Embedding 工厂模式（本地/云端切换）</li>
-                <li>混合检索策略（向量 + 全文）</li>
-                <li>多格式文档 ETL Pipeline</li>
-              </AdvantageCardContent>
-            </AdvantageCard>
-
-            <AdvantageCard>
-              <AdvantageCardTitle>后端工程与系统集成</AdvantageCardTitle>
-              <AdvantageCardContent>
-                <li>Django/DRF/FastAPI 微服务开发</li>
-                <li>MQTT 工业协议与消息可靠性</li>
-                <li>WMS/MES/电梯等多系统对接</li>
-                <li>高并发缓存与生产级架构</li>
-              </AdvantageCardContent>
-            </AdvantageCard>
-          </AdvantagesGrid>
-        </AdvantagesSection>
-      </ResumeContainer>
+      <HomeContainer>
+        <ProjectShowcase>
+          {projects.map((project, index) => (
+            <ProjectItem key={project.name} $delay={`${100 + index * 150}ms`}>
+              <ProjectInfo>
+                <ProjectTitle>{project.name}</ProjectTitle>
+                <ProjectDescription>{project.description}</ProjectDescription>
+                <ProjectLink href={project.url} target="_blank" rel="noopener noreferrer">
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.003.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                  </svg>
+                  查看源码
+                </ProjectLink>
+              </ProjectInfo>
+              <ProjectImage
+                src={new URL(`../../homepage-data/${project.image}`, import.meta.url).href}
+                alt={project.name}
+              />
+            </ProjectItem>
+          ))}
+        </ProjectShowcase>
+      </HomeContainer>
 
       <FooterButton onClick={() => navigate('/portfolio')}>
         前往我的案例库 →

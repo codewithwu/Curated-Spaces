@@ -37,7 +37,7 @@ const ProjectShowcase = styled.div`
   padding: 80px 0;
 `
 
-const ProjectItem = styled.div`
+const ProjectItem = styled.div<{ $delay?: string }>`
   animation: ${fadeSlideUp} 800ms cubic-bezier(0.4, 0, 0.2, 1) both;
   animation-delay: ${(props) => props.$delay || '100ms'};
 `
@@ -69,7 +69,7 @@ const ProjectLink = styled.a`
   color: ${theme.colors.accent};
   text-decoration: none;
   font-weight: 400;
-  transition: color ${theme.transitions.default};
+  transition: color ${theme.transitions.fade};
 
   &:hover {
     color: ${theme.colors.accentLight};

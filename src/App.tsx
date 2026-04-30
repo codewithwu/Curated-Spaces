@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { Header } from './components/Header'
 import { SectionGrid } from './components/SectionGrid'
@@ -10,7 +10,6 @@ import { usePortfolio } from './hooks/usePortfolio'
 import { theme } from './styles/theme'
 import type { PortfolioData } from './types'
 
-const INITIAL_DATA_KEY = 'portfolio_initialized'
 const AUTH_KEY = 'portfolio_auth'
 const ADMIN_PASSWORD = 'helloworld' // 可在此修改密码
 
@@ -50,36 +49,34 @@ export default function App() {
     deleteWork,
     exportData,
     importData,
+    setInitialData,
   } = usePortfolio()
 
   const [isSectionModalOpen, setIsSectionModalOpen] = useState(false)
   const [isWorkModalOpen, setIsWorkModalOpen] = useState(false)
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false)
   const [activeSectionId, setActiveSectionId] = useState<string | null>(null)
-  const [initialDataLoaded, setInitialDataLoaded] = useState(false)
   const [isLocked, setIsLocked] = useState(() => {
     return sessionStorage.getItem(AUTH_KEY) !== 'true'
   })
   const [pendingAction, setPendingAction] = useState<'export' | 'import' | null>(null)
+  const initialDataLoadedRef = useRef(false)
 
   useEffect(() => {
-    if (!initialDataLoaded && sections.length === 0) {
-      fetch('/data/portfolio.json')
-        .then((res) => res.json())
-        .then((data: PortfolioData) => {
-          if (data && data.version === 1 && data.sections?.length > 0) {
-            importData(data)
-            sessionStorage.setItem(INITIAL_DATA_KEY, 'true')
-          }
-        })
-        .catch(() => {
-          // fallback to localStorage
-        })
-        .finally(() => {
-          setInitialDataLoaded(true)
-        })
-    }
-  }, [initialDataLoaded, sections.length, importData])
+    if (initialDataLoadedRef.current || sections.length > 0) return
+    initialDataLoadedRef.current = true
+
+    fetch('/data/portfolio.json')
+      .then((res) => res.json())
+      .then((data: PortfolioData) => {
+        if (data && data.version === 1 && data.sections?.length > 0) {
+          setInitialData(data)
+        }
+      })
+      .catch(() => {
+        // ignore errors, use empty initial state
+      })
+  }, [sections.length, setInitialData])
 
   const handleAddSection = (name: string) => {
     addSection(name)

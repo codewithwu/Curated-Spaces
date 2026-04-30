@@ -1,71 +1,55 @@
-import { useCallback } from 'react'
-import { v4 as uuidv4 } from 'uuid'
-import { useLocalStorage } from './useLocalStorage'
+import { useState, useCallback } from 'react'
 import type { PortfolioData, Section, Work } from '../types'
-
-const STORAGE_KEY = 'portfolio_data'
 
 const initialData: PortfolioData = {
   version: 1,
   sections: [],
 }
 
-export function usePortfolio() {
-  const [data, setData] = useLocalStorage<PortfolioData>(STORAGE_KEY, initialData)
+export function usePortfolio(initialLoadedData?: PortfolioData) {
+  const [data, setData] = useState<PortfolioData>(initialLoadedData || initialData)
 
-  const addSection = useCallback(
-    (name: string) => {
-      const newSection: Section = {
-        id: uuidv4(),
-        name,
-        works: [],
-      }
-      setData((prev) => ({
-        ...prev,
-        sections: [...prev.sections, newSection],
-      }))
-    },
-    [setData]
-  )
+  const addSection = useCallback((name: string) => {
+    const newSection: Section = {
+      id: crypto.randomUUID(),
+      name,
+      works: [],
+    }
+    setData((prev) => ({
+      ...prev,
+      sections: [...prev.sections, newSection],
+    }))
+  }, [])
 
-  const deleteSection = useCallback(
-    (sectionId: string) => {
-      setData((prev) => ({
-        ...prev,
-        sections: prev.sections.filter((s) => s.id !== sectionId),
-      }))
-    },
-    [setData]
-  )
+  const deleteSection = useCallback((sectionId: string) => {
+    setData((prev) => ({
+      ...prev,
+      sections: prev.sections.filter((s) => s.id !== sectionId),
+    }))
+  }, [])
 
-  const updateSectionSize = useCallback(
-    (sectionId: string, width: number, height: number) => {
-      setData((prev) => ({
-        ...prev,
-        sections: prev.sections.map((s) =>
-          s.id === sectionId ? { ...s, width, height } : s
-        ),
-      }))
-    },
-    [setData]
-  )
+  const updateSectionSize = useCallback((sectionId: string, width: number, height: number) => {
+    setData((prev) => ({
+      ...prev,
+      sections: prev.sections.map((s) =>
+        s.id === sectionId ? { ...s, width, height } : s
+      ),
+    }))
+  }, [])
 
-  const updateSection = useCallback(
-    (sectionId: string, name: string) => {
-      setData((prev) => ({
-        ...prev,
-        sections: prev.sections.map((s) =>
-          s.id === sectionId ? { ...s, name } : s
-        ),
-      }))
-    },
-    [setData]
-  )
+  const updateSection = useCallback((sectionId: string, name: string) => {
+    setData((prev) => ({
+      ...prev,
+      sections: prev.sections.map((s) =>
+        s.id === sectionId ? { ...s, name } : s
+      ),
+    }))
+  }, [])
 
   const addWork = useCallback(
     (sectionId: string, title: string, url: string, previewUrl: string, description: string) => {
       const newWork: Work = {
-        id: uuidv4(),
+        id: crypto.randomUUID(),
         title,
         url,
         previewUrl: previewUrl || undefined,
@@ -78,7 +62,7 @@ export function usePortfolio() {
         ),
       }))
     },
-    [setData]
+    []
   )
 
   const updateWork = useCallback(
@@ -97,33 +81,31 @@ export function usePortfolio() {
         ),
       }))
     },
-    [setData]
+    []
   )
 
-  const deleteWork = useCallback(
-    (sectionId: string, workId: string) => {
-      setData((prev) => ({
-        ...prev,
-        sections: prev.sections.map((s) =>
-          s.id === sectionId
-            ? { ...s, works: s.works.filter((w) => w.id !== workId) }
-            : s
-        ),
-      }))
-    },
-    [setData]
-  )
+  const deleteWork = useCallback((sectionId: string, workId: string) => {
+    setData((prev) => ({
+      ...prev,
+      sections: prev.sections.map((s) =>
+        s.id === sectionId
+          ? { ...s, works: s.works.filter((w) => w.id !== workId) }
+          : s
+      ),
+    }))
+  }, [])
 
   const exportData = useCallback((): PortfolioData => {
     return { ...data }
   }, [data])
 
-  const importData = useCallback(
-    (newData: PortfolioData) => {
-      setData(newData)
-    },
-    [setData]
-  )
+  const importData = useCallback((newData: PortfolioData) => {
+    setData(newData)
+  }, [])
+
+  const setInitialData = useCallback((newData: PortfolioData) => {
+    setData(newData)
+  }, [])
 
   return {
     sections: data.sections,
@@ -136,5 +118,6 @@ export function usePortfolio() {
     deleteWork,
     exportData,
     importData,
+    setInitialData,
   }
 }
